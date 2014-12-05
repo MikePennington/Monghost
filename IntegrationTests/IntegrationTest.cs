@@ -51,7 +51,6 @@ namespace IntegrationTests
 
             objectFromDb.Id.ShouldBe(objectFromFixture.Id);
             objectFromDb.String.ShouldBe(objectFromFixture.String);
-            objectFromDb.DateTime.ShouldBe(objectFromFixture.DateTime);
             objectFromDb.Bool.ShouldBe(objectFromFixture.Bool);
             objectFromDb.List.Count.ShouldBe(objectFromFixture.List.Count);
         }
@@ -74,7 +73,6 @@ namespace IntegrationTests
     {
         public override ObjectId Id { get; set; }
         public string String { get; set; }
-        public DateTime DateTime { get; set; }
         public bool Bool { get; set; }
         public List<int> List { get; set; }
     }

@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Monghost;
 using MongoDB.Bson;
 
-namespace MonGhost
+namespace Monghost
 {
-    public abstract class MongoEntity
+    public abstract class MongoEntity<T>
     {
         private static readonly Dictionary<Type, string> CollectionNameMap = new Dictionary<Type, string>();
 
-        public abstract ObjectId Id { get; set; }
+        public abstract T Id { get; set; }
 
         public string GetCollectionName()
         {
@@ -31,5 +30,10 @@ namespace MonGhost
             var name = GetType().Name.ToLower();
             return Pluralization.Pluralize(name);
         }
+    }
+
+    public abstract class MongoEntity : MongoEntity<ObjectId>
+    {
+        public abstract override ObjectId Id { get; set; }
     }
 }

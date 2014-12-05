@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MonGhost;
+using Monghost;
 using MongoDB.Bson;
 using Ploeh.AutoFixture;
 using Shouldly;
@@ -67,11 +67,33 @@ namespace IntegrationTests
 
             objectFromDb.ShouldBe(null);
         }
+
+        [TestMethod]
+        public void ShouldSaveAndFindObjectWithStringId()
+        {
+            var objectFromFixture = _fixture.Build<ObjectWithStringId>().Without(x => x.Id).Create();
+            _mongoHelper.Save<ObjectWithStringId, string>(objectFromFixture);
+
+            var objectFromDb = _mongoHelper.FindOne<ObjectWithStringId, string>(objectFromFixture.Id);
+
+            objectFromDb.Id.ShouldBe(objectFromFixture.Id);
+            objectFromDb.String.ShouldBe(objectFromFixture.String);
+            objectFromDb.Bool.ShouldBe(objectFromFixture.Bool);
+            objectFromDb.List.Count.ShouldBe(objectFromFixture.List.Count);
+        }
     }
 
     public class ObjectWithObjectId : MongoEntity
     {
         public override ObjectId Id { get; set; }
+        public string String { get; set; }
+        public bool Bool { get; set; }
+        public List<int> List { get; set; }
+    }
+
+    public class ObjectWithStringId : MongoEntity<string>
+    {
+        public override string Id { get; set; }
         public string String { get; set; }
         public bool Bool { get; set; }
         public List<int> List { get; set; }

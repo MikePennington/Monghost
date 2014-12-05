@@ -5,18 +5,22 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
-namespace MonGhost
+namespace Monghost
 {
     public interface IMongoHelper
     {
         MongoDatabase Database { get; }
         MongoCollection<T> GetCollection<T>() where T : MongoEntity;
+        MongoCollection<T> GetCollection<T, K>() where T : MongoEntity<K>;
+
         T FindOne<T>(ObjectId id) where T : MongoEntity;
-        T FindOne<T>(IMongoQuery query) where T : MongoEntity;
-        List<T> Find<T>(IMongoQuery query) where T : MongoEntity;
+        T FindOne<T, K>(K id) where T : MongoEntity<K>;
+        
         void Save<T>(T entity) where T : MongoEntity;
-        void Insert<T>(T entity) where T : MongoEntity;
+        void Save<T, K>(T entity) where T : MongoEntity<K>;
+        
         void Remove<T>(T entity) where T : MongoEntity;
+        void Remove<T, K>(T entity) where T : MongoEntity<K>;
     }
 
     public class MongoHelper : IMongoHelper
@@ -39,6 +43,11 @@ namespace MonGhost
 
         public MongoCollection<T> GetCollection<T>() where T : MongoEntity
         {
+            return GetCollection<T, ObjectId>();
+        }
+
+        public MongoCollection<T> GetCollection<T, K>() where T : MongoEntity<K>
+        {
             // Check dictionary first
             string collectionName;
             if (CollectionNameMap.ContainsKey(typeof(T)))
@@ -57,38 +66,35 @@ namespace MonGhost
 
         public T FindOne<T>(ObjectId id) where T : MongoEntity
         {
-            var collection = GetCollection<T>();
+            return FindOne<T, ObjectId>(id);
+        }
+
+        public T FindOne<T, K>(K id) where T : MongoEntity<K>
+        {
+            var collection = GetCollection<T, K>();
             var query = Query<T>.EQ(x => x.Id, id);
             return collection.FindOne(query);
         }
 
-        public T FindOne<T>(IMongoQuery query) where T : MongoEntity
-        {
-            var collection = GetCollection<T>();
-            return collection.FindOne(query);
-        }
-
-        public List<T> Find<T>(IMongoQuery query) where T : MongoEntity
-        {
-            var collection = GetCollection<T>();
-            return collection.Find(query).ToList();
-        }
-
         public void Save<T>(T entity) where T : MongoEntity
         {
-            var collection = GetCollection<T>();
-            collection.Save(entity);
+            Save<T, ObjectId>(entity);
         }
 
-        public void Insert<T>(T entity) where T : MongoEntity
+        public void Save<T, K>(T entity) where T : MongoEntity<K>
         {
-            var collection = GetCollection<T>();
-            collection.Insert(entity);
+            var collection = GetCollection<T, K>();
+            collection.Save(entity);
         }
 
         public void Remove<T>(T entity) where T : MongoEntity
         {
-            var collection = GetCollection<T>();
+            Remove<T, ObjectId>(entity);
+        }
+
+        public void Remove<T, K>(T entity) where T : MongoEntity<K>
+        {
+            var collection = GetCollection<T, K>();
             var query = Query<T>.EQ(x => x.Id, entity.Id);
             collection.Remove(query);
         }

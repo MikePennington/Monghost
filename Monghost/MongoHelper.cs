@@ -35,7 +35,6 @@ namespace MonGhost
             }
         }
 
-        // Database is a singlton
         public MongoDatabase Database { get { return _database; } }
 
         public MongoCollection<T> GetCollection<T>() where T : MongoEntity

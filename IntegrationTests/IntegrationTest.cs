@@ -35,53 +35,47 @@ namespace IntegrationTests
         [TestMethod]
         public void SaveShouldPopulateId()
         {
-            var person = _fixture.Build<Person>().Without(x => x.Id).Create();
-            _mongoHelper.Save(person);
+            var objectFromFixture = _fixture.Build<ObjectWithObjectId>().Without(x => x.Id).Create();
+            _mongoHelper.Save(objectFromFixture);
 
-            person.Id.ShouldNotBe(ObjectId.Empty);
+            objectFromFixture.Id.ShouldNotBe(ObjectId.Empty);
         }
 
         [TestMethod]
         public void ShouldSaveAndFind()
         {
-            var person = _fixture.Build<Person>().Without(x => x.Id).Create();
-            _mongoHelper.Save(person);
+            var objectFromFixture = _fixture.Build<ObjectWithObjectId>().Without(x => x.Id).Create();
+            _mongoHelper.Save(objectFromFixture);
 
-            var personFromDb = _mongoHelper.FindOne<Person>(person.Id);
+            var objectFromDb = _mongoHelper.FindOne<ObjectWithObjectId>(objectFromFixture.Id);
 
-            personFromDb.Id.ShouldBe(person.Id);
-            personFromDb.Name.ShouldBe(person.Name);
-            personFromDb.Addresses.Count.ShouldBe(person.Addresses.Count);
+            objectFromDb.Id.ShouldBe(objectFromFixture.Id);
+            objectFromDb.String.ShouldBe(objectFromFixture.String);
+            objectFromDb.DateTime.ShouldBe(objectFromFixture.DateTime);
+            objectFromDb.Bool.ShouldBe(objectFromFixture.Bool);
+            objectFromDb.List.Count.ShouldBe(objectFromFixture.List.Count);
         }
 
         [TestMethod]
         public void ShouldRemove()
         {
-            var person = _fixture.Build<Person>().Without(x => x.Id).Create();
-            _mongoHelper.Save(person);
+            var objectFromFixture = _fixture.Build<ObjectWithObjectId>().Without(x => x.Id).Create();
+            _mongoHelper.Save(objectFromFixture);
 
-            _mongoHelper.Remove(person);
+            _mongoHelper.Remove(objectFromFixture);
 
-            var personFromDb = _mongoHelper.FindOne<Person>(person.Id);
+            var objectFromDb = _mongoHelper.FindOne<ObjectWithObjectId>(objectFromFixture.Id);
 
-            personFromDb.ShouldBe(null);
+            objectFromDb.ShouldBe(null);
         }
     }
 
-    public class Person : MongoEntity
+    public class ObjectWithObjectId : MongoEntity
     {
         public override ObjectId Id { get; set; }
-        public string Name { get; set; }
-        public DateTime Birthday { get; set; }
-        public List<Address> Addresses { get; set; }
-    }
-
-    public class Address
-    {
-        public string Street { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string Zip { get; set; }
-        public bool Default { get; set; }
+        public string String { get; set; }
+        public DateTime DateTime { get; set; }
+        public bool Bool { get; set; }
+        public List<int> List { get; set; }
     }
 }

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Monghost;
+using Shouldly;
 
-namespace Test
+namespace UnitTests
 {
     [TestClass]
     public class PluralizationTest

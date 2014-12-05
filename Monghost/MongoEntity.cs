@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Monghost;
 using MongoDB.Bson;
 
 namespace MonGhost
@@ -28,32 +29,7 @@ namespace MonGhost
         private string LowerAndPluralizeType()
         {
             var name = GetType().Name.ToLower();
-
-            // For some words we need to look at more than just the last letter
-            if (name.EndsWith("tch"))
-            {
-                name = name + "es";
-                AddToMap(name);
-                return name;
-            }
-
-            // Look at the last letter to determine how to pluralize
-            var lastLetter = name.Substring(name.Length - 1);
-            switch (lastLetter)
-            {
-                case "y":
-                    int index = name.LastIndexOf("y");
-                    name = name.Remove(index, 1).Insert(index, "ies");
-                    return name;
-                case "s":
-                case "o":
-                case "x":
-                    name = name + "es";
-                    return name;
-                default:
-                    name = name + "s";
-                    return name;
-            }
+            return Pluralization.Pluralize(name);
         }
     }
 }

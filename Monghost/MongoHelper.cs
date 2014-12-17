@@ -56,7 +56,7 @@ namespace Monghost
             }
             else
             {
-                collectionName = ((T)Activator.CreateInstance(typeof(T))).GetCollectionName();
+                collectionName = BuildCollectionName(typeof(T));
                 CollectionNameMap.Add(typeof(T), collectionName);
             }
 
@@ -97,6 +97,12 @@ namespace Monghost
             var collection = GetCollection<T, K>();
             var query = Query<T>.EQ(x => x.Id, entity.Id);
             collection.Remove(query);
+        }
+
+        public string BuildCollectionName(Type type)
+        {
+            var name = type.Name.ToLower();
+            return Pluralization.Pluralize(name);
         }
     }
 }

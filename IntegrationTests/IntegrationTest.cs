@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Monghost;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 using Ploeh.AutoFixture;
 using Shouldly;
 
@@ -42,6 +44,16 @@ namespace IntegrationTests
         }
 
         [TestMethod]
+        public void ShouldPluralizeAndLowercaseCollectionName()
+        {
+            var objectFromFixture = _fixture.Build<ObjectWithObjectId>().Without(x => x.Id).Create();
+            _mongoHelper.Save(objectFromFixture);
+
+            var objectFromDb = _mongoHelper.Database.GetCollection<ObjectWithObjectId>("objectwithobjectids").FindOne();
+            objectFromDb.ShouldNotBe(null);
+        }
+
+        [TestMethod]
         public void ShouldSaveAndFind()
         {
             var objectFromFixture = _fixture.Build<ObjectWithObjectId>().Without(x => x.Id).Create();
@@ -71,10 +83,10 @@ namespace IntegrationTests
         [TestMethod]
         public void ShouldSaveAndFindObjectWithStringId()
         {
-            var objectFromFixture = _fixture.Build<ObjectWithStringId>().Without(x => x.Id).Create();
-            _mongoHelper.Save<ObjectWithStringId, string>(objectFromFixture);
+            var objectFromFixture = _fixture.Build<ObjectWithStringId>().Create();
+            _mongoHelper.Save<ObjectWithStringId, Guid>(objectFromFixture);
 
-            var objectFromDb = _mongoHelper.FindOne<ObjectWithStringId, string>(objectFromFixture.Id);
+            var objectFromDb = _mongoHelper.FindOne<ObjectWithStringId, Guid>(objectFromFixture.Id);
 
             objectFromDb.Id.ShouldBe(objectFromFixture.Id);
             objectFromDb.String.ShouldBe(objectFromFixture.String);
@@ -91,9 +103,9 @@ namespace IntegrationTests
         public List<int> List { get; set; }
     }
 
-    public class ObjectWithStringId : MongoEntity<string>
+    public class ObjectWithStringId : MongoEntity<Guid>
     {
-        public override string Id { get; set; }
+        public override Guid Id { get; set; }
         public string String { get; set; }
         public bool Bool { get; set; }
         public List<int> List { get; set; }

@@ -13,4 +13,9 @@ namespace Monghost
     {
         public abstract override ObjectId Id { get; set; }
     }
+
+    public abstract class MongoTest
+    {
+        public abstract string GetIdName();
+    }
 }

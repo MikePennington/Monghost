@@ -93,6 +93,18 @@ namespace IntegrationTests
             objectFromDb.Bool.ShouldBe(objectFromFixture.Bool);
             objectFromDb.List.Count.ShouldBe(objectFromFixture.List.Count);
         }
+
+        [TestMethod]
+        public void ShouldSaveAndFindEntityWithFunc()
+        {
+            var objectFromFixture = _fixture.Build<EntityWithNonId>().Create();
+            _mongoHelper.SaveTest(objectFromFixture);
+
+            var objectFromDb = _mongoHelper.FindOneTest<EntityWithNonId>(objectFromFixture.Name);
+
+            objectFromDb.Name.ShouldBe(objectFromFixture.Name);
+            objectFromDb.Age.ShouldBe(objectFromFixture.Age);
+        }
     }
 
     public class ObjectWithObjectId : MongoEntity
@@ -109,5 +121,16 @@ namespace IntegrationTests
         public string String { get; set; }
         public bool Bool { get; set; }
         public List<int> List { get; set; }
+    }
+
+    public class EntityWithNonId : MongoTest
+    {
+        [BsonId]
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public override string GetIdName()
+        {
+            return "_id";
+        }
     }
 }

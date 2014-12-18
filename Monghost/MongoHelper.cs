@@ -15,9 +15,11 @@ namespace Monghost
 
         T FindOne<T>(ObjectId id) where T : MongoEntity;
         T FindOne<T, K>(K id) where T : MongoEntity<K>;
+        T FindOneTest<T>(BsonValue id) where T : MongoTest;
         
         void Save<T>(T entity) where T : MongoEntity;
         void Save<T, K>(T entity) where T : MongoEntity<K>;
+        void SaveTest<T>(T entity) where T : MongoTest;
         
         void Remove<T>(T entity) where T : MongoEntity;
         void Remove<T, K>(T entity) where T : MongoEntity<K>;
@@ -64,6 +66,24 @@ namespace Monghost
             return collection;
         }
 
+        public MongoCollection<T> GetCollectionTest<T>() where T : MongoTest
+        {
+            // Check dictionary first
+            string collectionName;
+            if (CollectionNameMap.ContainsKey(typeof(T)))
+            {
+                collectionName = CollectionNameMap[typeof(T)];
+            }
+            else
+            {
+                collectionName = BuildCollectionName(typeof(T));
+                CollectionNameMap.Add(typeof(T), collectionName);
+            }
+
+            var collection = Database.GetCollection<T>(collectionName);
+            return collection;
+        }
+
         public T FindOne<T>(ObjectId id) where T : MongoEntity
         {
             return FindOne<T, ObjectId>(id);
@@ -76,6 +96,14 @@ namespace Monghost
             return collection.FindOne(query);
         }
 
+        public T FindOneTest<T>(BsonValue id) where T : MongoTest
+        {
+            var collection = GetCollectionTest<T>();
+            var instance = Activator.CreateInstance<T>();
+            var query = Query.EQ(instance.GetIdName(), id);
+            return collection.FindOne(query);
+        }
+
         public void Save<T>(T entity) where T : MongoEntity
         {
             Save<T, ObjectId>(entity);
@@ -84,6 +112,12 @@ namespace Monghost
         public void Save<T, K>(T entity) where T : MongoEntity<K>
         {
             var collection = GetCollection<T, K>();
+            collection.Save(entity);
+        }
+
+        public void SaveTest<T>(T entity) where T : MongoTest
+        {
+            var collection = GetCollectionTest<T>();
             collection.Save(entity);
         }
 

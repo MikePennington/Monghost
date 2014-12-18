@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Design.PluralizationServices;
+﻿using System.Data.Entity.Design.PluralizationServices;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Monghost
+namespace MongoBondo
 {
     internal static class Pluralization
     {

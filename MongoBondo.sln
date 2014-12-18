@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monghost", "Monghost\Monghost.csproj", "{95A7D27D-B9B9-42B2-A54B-B963DB4C2B17}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoBondo", "MongoBondo\MongoBondo.csproj", "{95A7D27D-B9B9-42B2-A54B-B963DB4C2B17}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{5A3670E1-5F81-4095-B26C-ED4D1E0BA678}"
 EndProject

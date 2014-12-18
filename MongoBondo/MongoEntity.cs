@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 
-namespace Monghost
+namespace MongoBondo
 {
     public class MongoEntity
     {

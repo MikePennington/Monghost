@@ -7,8 +7,8 @@
     <ProjectGuid>{95A7D27D-B9B9-42B2-A54B-B963DB4C2B17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Monghost</RootNamespace>
-    <AssemblyName>Monghost</AssemblyName>
+    <RootNamespace>MongoBondo</RootNamespace>
+    <AssemblyName>MongoBondo</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

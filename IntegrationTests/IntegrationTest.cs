@@ -37,77 +37,103 @@ namespace IntegrationTests
         [TestMethod]
         public void SaveShouldPopulateId()
         {
-            var objectFromFixture = _fixture.Build<ObjectWithObjectId>().Without(x => x.Id).Create();
-            _mongoHelper.Save(objectFromFixture);
+            var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
+            _mongoHelper.Save(entityFromFixture);
 
-            objectFromFixture.Id.ShouldNotBe(ObjectId.Empty);
+            entityFromFixture.Id.ShouldNotBe(ObjectId.Empty);
         }
 
         [TestMethod]
         public void ShouldPluralizeAndLowercaseCollectionName()
         {
-            var objectFromFixture = _fixture.Build<ObjectWithObjectId>().Without(x => x.Id).Create();
-            _mongoHelper.Save(objectFromFixture);
+            var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
+            _mongoHelper.Save(entityFromFixture);
 
-            var objectFromDb = _mongoHelper.Database.GetCollection<ObjectWithObjectId>("objectwithobjectids").FindOne();
-            objectFromDb.ShouldNotBe(null);
+            var entitytFromDb = _mongoHelper.Database.GetCollection<EntityWithObjectId>("entitywithobjectids").FindOne();
+            entitytFromDb.ShouldNotBe(null);
         }
 
         [TestMethod]
         public void ShouldSaveAndFind()
         {
-            var objectFromFixture = _fixture.Build<ObjectWithObjectId>().Without(x => x.Id).Create();
-            _mongoHelper.Save(objectFromFixture);
+            var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
+            _mongoHelper.Save(entityFromFixture);
 
-            var objectFromDb = _mongoHelper.FindOne<ObjectWithObjectId>(objectFromFixture.Id);
+            var entitytFromDb = _mongoHelper.FindOne<EntityWithObjectId>(entityFromFixture.Id);
 
-            objectFromDb.Id.ShouldBe(objectFromFixture.Id);
-            objectFromDb.String.ShouldBe(objectFromFixture.String);
-            objectFromDb.Bool.ShouldBe(objectFromFixture.Bool);
-            objectFromDb.List.Count.ShouldBe(objectFromFixture.List.Count);
+            entitytFromDb.Id.ShouldBe(entityFromFixture.Id);
+            entitytFromDb.String.ShouldBe(entityFromFixture.String);
+            entitytFromDb.Bool.ShouldBe(entityFromFixture.Bool);
+            entitytFromDb.List.Count.ShouldBe(entityFromFixture.List.Count);
         }
 
         [TestMethod]
         public void ShouldRemove()
         {
-            var objectFromFixture = _fixture.Build<ObjectWithObjectId>().Without(x => x.Id).Create();
-            _mongoHelper.Save(objectFromFixture);
+            var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
+            _mongoHelper.Save(entityFromFixture);
 
-            _mongoHelper.Remove(objectFromFixture);
+            _mongoHelper.Remove(entityFromFixture);
 
-            var objectFromDb = _mongoHelper.FindOne<ObjectWithObjectId>(objectFromFixture.Id);
+            var entitytFromDb = _mongoHelper.FindOne<EntityWithObjectId>(entityFromFixture.Id);
 
-            objectFromDb.ShouldBe(null);
+            entitytFromDb.ShouldBe(null);
         }
 
         [TestMethod]
-        public void ShouldSaveAndFindObjectWithStringId()
+        public void ShouldRemoveWithNonObjectIdId()
         {
-            var objectFromFixture = _fixture.Build<ObjectWithStringId>().Create();
-            _mongoHelper.Save<ObjectWithStringId, Guid>(objectFromFixture);
+            var entityFromFixture = _fixture.Build<EntityWithNonObjectIdId>().Create();
+            _mongoHelper.Save(entityFromFixture);
 
-            var objectFromDb = _mongoHelper.FindOne<ObjectWithStringId, Guid>(objectFromFixture.Id);
+            _mongoHelper.Remove<EntityWithNonObjectIdId>(entityFromFixture.Id);
 
-            objectFromDb.Id.ShouldBe(objectFromFixture.Id);
-            objectFromDb.String.ShouldBe(objectFromFixture.String);
-            objectFromDb.Bool.ShouldBe(objectFromFixture.Bool);
-            objectFromDb.List.Count.ShouldBe(objectFromFixture.List.Count);
+            var entitytFromDb = _mongoHelper.FindOne<EntityWithNonObjectIdId>(entityFromFixture.Id);
+
+            entitytFromDb.ShouldBe(null);
         }
 
         [TestMethod]
-        public void ShouldSaveAndFindEntityWithFunc()
+        public void ShouldRemoveWithNoId()
         {
-            var objectFromFixture = _fixture.Build<EntityWithNonId>().Create();
-            _mongoHelper.SaveTest(objectFromFixture);
+            var entityFromFixture = _fixture.Build<EntityWithNonId>().Create();
+            _mongoHelper.Save(entityFromFixture);
 
-            var objectFromDb = _mongoHelper.FindOneTest<EntityWithNonId>(objectFromFixture.Name);
+            _mongoHelper.Remove<EntityWithNonId>(entityFromFixture.Name);
 
-            objectFromDb.Name.ShouldBe(objectFromFixture.Name);
-            objectFromDb.Age.ShouldBe(objectFromFixture.Age);
+            var entitytFromDb = _mongoHelper.FindOne<EntityWithNonId>(entityFromFixture.Name);
+
+            entitytFromDb.ShouldBe(null);
+        }
+
+        [TestMethod]
+        public void ShouldSaveAndFindObjectWithNonObjectIdId()
+        {
+            var entityFromFixture = _fixture.Build<EntityWithNonObjectIdId>().Create();
+            _mongoHelper.Save(entityFromFixture);
+
+            var entitytFromDb = _mongoHelper.FindOne<EntityWithNonObjectIdId>(entityFromFixture.Id);
+
+            entitytFromDb.Id.ShouldBe(entityFromFixture.Id);
+            entitytFromDb.String.ShouldBe(entityFromFixture.String);
+            entitytFromDb.Bool.ShouldBe(entityFromFixture.Bool);
+            entitytFromDb.List.Count.ShouldBe(entityFromFixture.List.Count);
+        }
+
+        [TestMethod]
+        public void ShouldSaveAndFindEntityWithNoId()
+        {
+            var entityFromFixture = _fixture.Build<EntityWithNonId>().Create();
+            _mongoHelper.Save(entityFromFixture);
+
+            var entitytFromDb = _mongoHelper.FindOne<EntityWithNonId>(entityFromFixture.Name);
+
+            entitytFromDb.Name.ShouldBe(entityFromFixture.Name);
+            entitytFromDb.Age.ShouldBe(entityFromFixture.Age);
         }
     }
 
-    public class ObjectWithObjectId : MongoEntity
+    public class EntityWithObjectId : MongoEntityWithObjectId
     {
         public override ObjectId Id { get; set; }
         public string String { get; set; }
@@ -115,15 +141,15 @@ namespace IntegrationTests
         public List<int> List { get; set; }
     }
 
-    public class ObjectWithStringId : MongoEntity<Guid>
+    public class EntityWithNonObjectIdId : MongoEntity
     {
-        public override Guid Id { get; set; }
+        public Guid Id { get; set; }
         public string String { get; set; }
         public bool Bool { get; set; }
         public List<int> List { get; set; }
     }
 
-    public class EntityWithNonId : MongoTest
+    public class EntityWithNonId : MongoEntity
     {
         [BsonId]
         public string Name { get; set; }

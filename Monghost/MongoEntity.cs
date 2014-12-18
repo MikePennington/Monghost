@@ -4,18 +4,16 @@ using MongoDB.Bson;
 
 namespace Monghost
 {
-    public abstract class MongoEntity<T>
+    public class MongoEntity
     {
-        public abstract T Id { get; set; }
+        public virtual string GetIdName()
+        {
+            return "_id";
+        }
     }
-
-    public abstract class MongoEntity : MongoEntity<ObjectId>
+    
+    public abstract class MongoEntityWithObjectId : MongoEntity
     {
-        public abstract override ObjectId Id { get; set; }
-    }
-
-    public abstract class MongoTest
-    {
-        public abstract string GetIdName();
+        public abstract ObjectId Id { get; set; }
     }
 }

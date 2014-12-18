@@ -11,18 +11,11 @@ namespace Monghost
     {
         MongoDatabase Database { get; }
         MongoCollection<T> GetCollection<T>() where T : MongoEntity;
-        MongoCollection<T> GetCollection<T, K>() where T : MongoEntity<K>;
-
-        T FindOne<T>(ObjectId id) where T : MongoEntity;
-        T FindOne<T, K>(K id) where T : MongoEntity<K>;
-        T FindOneTest<T>(BsonValue id) where T : MongoTest;
-        
+        T FindOne<T>(ObjectId id) where T : MongoEntityWithObjectId;
+        T FindOne<T>(BsonValue id) where T : MongoEntity;
         void Save<T>(T entity) where T : MongoEntity;
-        void Save<T, K>(T entity) where T : MongoEntity<K>;
-        void SaveTest<T>(T entity) where T : MongoTest;
-        
-        void Remove<T>(T entity) where T : MongoEntity;
-        void Remove<T, K>(T entity) where T : MongoEntity<K>;
+        void Remove<T>(T entity) where T : MongoEntityWithObjectId;
+        void Remove<T>(BsonValue id) where T : MongoEntity;
     }
 
     public class MongoHelper : IMongoHelper
@@ -45,11 +38,6 @@ namespace Monghost
 
         public MongoCollection<T> GetCollection<T>() where T : MongoEntity
         {
-            return GetCollection<T, ObjectId>();
-        }
-
-        public MongoCollection<T> GetCollection<T, K>() where T : MongoEntity<K>
-        {
             // Check dictionary first
             string collectionName;
             if (CollectionNameMap.ContainsKey(typeof(T)))
@@ -66,39 +54,16 @@ namespace Monghost
             return collection;
         }
 
-        public MongoCollection<T> GetCollectionTest<T>() where T : MongoTest
+        public T FindOne<T>(ObjectId id) where T : MongoEntityWithObjectId
         {
-            // Check dictionary first
-            string collectionName;
-            if (CollectionNameMap.ContainsKey(typeof(T)))
-            {
-                collectionName = CollectionNameMap[typeof(T)];
-            }
-            else
-            {
-                collectionName = BuildCollectionName(typeof(T));
-                CollectionNameMap.Add(typeof(T), collectionName);
-            }
-
-            var collection = Database.GetCollection<T>(collectionName);
-            return collection;
-        }
-
-        public T FindOne<T>(ObjectId id) where T : MongoEntity
-        {
-            return FindOne<T, ObjectId>(id);
-        }
-
-        public T FindOne<T, K>(K id) where T : MongoEntity<K>
-        {
-            var collection = GetCollection<T, K>();
+            var collection = GetCollection<T>();
             var query = Query<T>.EQ(x => x.Id, id);
             return collection.FindOne(query);
         }
 
-        public T FindOneTest<T>(BsonValue id) where T : MongoTest
+        public T FindOne<T>(BsonValue id) where T : MongoEntity
         {
-            var collection = GetCollectionTest<T>();
+            var collection = GetCollection<T>();
             var instance = Activator.CreateInstance<T>();
             var query = Query.EQ(instance.GetIdName(), id);
             return collection.FindOne(query);
@@ -106,30 +71,22 @@ namespace Monghost
 
         public void Save<T>(T entity) where T : MongoEntity
         {
-            Save<T, ObjectId>(entity);
-        }
-
-        public void Save<T, K>(T entity) where T : MongoEntity<K>
-        {
-            var collection = GetCollection<T, K>();
+            var collection = GetCollection<T>();
             collection.Save(entity);
         }
 
-        public void SaveTest<T>(T entity) where T : MongoTest
+        public void Remove<T>(T entity) where T : MongoEntityWithObjectId
         {
-            var collection = GetCollectionTest<T>();
-            collection.Save(entity);
-        }
-
-        public void Remove<T>(T entity) where T : MongoEntity
-        {
-            Remove<T, ObjectId>(entity);
-        }
-
-        public void Remove<T, K>(T entity) where T : MongoEntity<K>
-        {
-            var collection = GetCollection<T, K>();
+            var collection = GetCollection<T>();
             var query = Query<T>.EQ(x => x.Id, entity.Id);
+            collection.Remove(query);
+        }
+
+        public void Remove<T>(BsonValue id) where T : MongoEntity
+        {
+            var collection = GetCollection<T>();
+            var instance = Activator.CreateInstance<T>();
+            var query = Query.EQ(instance.GetIdName(), id);
             collection.Remove(query);
         }
 

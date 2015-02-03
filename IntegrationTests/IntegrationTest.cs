@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoBondo;
 using MongoDB.Bson;
@@ -10,13 +11,28 @@ using Shouldly;
 namespace IntegrationTests
 {
     /// <summary>
-    /// MongoDB must be running locally at 127.0.0.1:27017 for these tests to run properly
+    /// MongoDB is now started and stopped from inside the tests! Now need to have it running beforehand.
     /// </summary>
     [TestClass]
     public class IntegrationTest
     {
-        private static Fixture _fixture;
-        private static IMongoHelper _mongoHelper;
+        private static Process _mongodProcess;
+
+        private Fixture _fixture;
+        private IMongoHelper _mongoHelper;
+
+        [AssemblyInitialize]
+        public static void AssemblyInitialize(TestContext context)
+        {
+            _mongodProcess = new Process { StartInfo = { FileName = "mongod", Arguments = "--smallfiles --port 27027" } }; // Use non-standard port
+            _mongodProcess.Start(); 
+        }
+
+        [AssemblyCleanup]
+        public static void AssemblyCleanup()
+        {
+            _mongodProcess.CloseMainWindow();
+        }
 
         [TestInitialize]
         public void Setup()
@@ -24,7 +40,7 @@ namespace IntegrationTests
             _fixture = new Fixture();
 
             // Create a new database with each test to ensure test isolation
-            _mongoHelper = new MongoHelper("mongodb://127.0.0.1:27017", "monghost-integration-tests-" + Guid.NewGuid());
+            _mongoHelper = new MongoHelper("mongodb://127.0.0.1:27027", "monghost-integration-tests-" + Guid.NewGuid());
         }
 
         [TestCleanup]

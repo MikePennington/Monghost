@@ -88,7 +88,7 @@ namespace IntegrationTests
             var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
             _mongoMapper.Save(entityFromFixture);
 
-            _mongoMapper.Remove(entityFromFixture);
+            _mongoMapper.Remove<EntityWithObjectId>(entityFromFixture.Id);
 
             var entitytFromDb = _mongoMapper.FindOne<EntityWithObjectId>(entityFromFixture.Id);
 
@@ -148,9 +148,9 @@ namespace IntegrationTests
         }
     }
 
-    public class EntityWithObjectId : MongoEntityWithObjectId
+    public class EntityWithObjectId : MongoEntity
     {
-        public override ObjectId Id { get; set; }
+        public ObjectId Id { get; set; }
         public string String { get; set; }
         public bool Bool { get; set; }
         public List<int> List { get; set; }

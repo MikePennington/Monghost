@@ -10,10 +10,10 @@ namespace Mongonizer
     {
         MongoDatabase Database { get; }
         MongoCollection<T> GetCollection<T>() where T : MongoEntity;
-        T FindOne<T>(ObjectId id) where T : MongoEntityWithObjectId;
+        //T FindOne<T>(ObjectId id) where T : MongoEntityWithObjectId;
         T FindOne<T>(BsonValue id) where T : MongoEntity;
         void Save<T>(T entity) where T : MongoEntity;
-        void Remove<T>(T entity) where T : MongoEntityWithObjectId;
+        //void Remove<T>(T entity) where T : MongoEntity;
         void Remove<T>(BsonValue id) where T : MongoEntity;
     }
 
@@ -53,12 +53,12 @@ namespace Mongonizer
             return collection;
         }
 
-        public T FindOne<T>(ObjectId id) where T : MongoEntityWithObjectId
-        {
-            var collection = GetCollection<T>();
-            var query = Query<T>.EQ(x => x.Id, id);
-            return collection.FindOne(query);
-        }
+        //public T FindOne<T>(ObjectId id) where T : MongoEntityWithObjectId
+        //{
+        //    var collection = GetCollection<T>();
+        //    var query = Query<T>.EQ(x => x.Id, id);
+        //    return collection.FindOne(query);
+        //}
 
         public T FindOne<T>(BsonValue id) where T : MongoEntity
         {
@@ -74,12 +74,12 @@ namespace Mongonizer
             collection.Save(entity);
         }
 
-        public void Remove<T>(T entity) where T : MongoEntityWithObjectId
-        {
-            var collection = GetCollection<T>();
-            var query = Query<T>.EQ(x => x.Id, entity.Id);
-            collection.Remove(query);
-        }
+        //public void Remove<T>(T entity) where T : MongoEntity
+        //{
+        //    var collection = GetCollection<T>();
+        //    var query = Query.EQ(entity.GetIdName(), entity.);
+        //    collection.Remove(query);
+        //}
 
         public void Remove<T>(BsonValue id) where T : MongoEntity
         {

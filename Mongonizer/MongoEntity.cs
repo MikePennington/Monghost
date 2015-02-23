@@ -9,9 +9,4 @@ namespace Mongonizer
             return "_id";
         }
     }
-    
-    public abstract class MongoEntityWithObjectId : MongoEntity
-    {
-        public abstract ObjectId Id { get; set; }
-    }
 }

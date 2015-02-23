@@ -2,10 +2,10 @@
 <package >
   <metadata>
     <id>GameStop.Mongonizer</id>
-    <version>0.0.0</version><!-- Version set by TeamCity -->
+    <version>1.0.0</version>
     <title>Mongonizer</title>
     <authors>Mike Pennington</authors>
-    <owners>GameStop Online</owners>
+    <owners>Mike Pennnington</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A lightweight wrapper around the .NET MongoDB ORM to automate object to collection name mapping.</description>
     <tags></tags>

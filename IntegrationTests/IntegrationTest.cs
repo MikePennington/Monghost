@@ -96,6 +96,19 @@ namespace IntegrationTests
         }
 
         [TestMethod]
+        public void ShouldRemoveWithEntityMethod()
+        {
+            var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
+            _mongoMapper.Save(entityFromFixture);
+
+            _mongoMapper.Remove(entityFromFixture);
+
+            var entitytFromDb = _mongoMapper.FindOne<EntityWithObjectId>(entityFromFixture.Id);
+
+            entitytFromDb.ShouldBe(null);
+        }
+
+        [TestMethod]
         public void ShouldRemoveWithNonObjectIdId()
         {
             var entityFromFixture = _fixture.Build<EntityWithNonObjectIdId>().Create();
@@ -148,9 +161,9 @@ namespace IntegrationTests
         }
     }
 
-    public class EntityWithObjectId : MongoEntity
+    public class EntityWithObjectId : MongoEntityWithObjectId
     {
-        public ObjectId Id { get; set; }
+        public override ObjectId Id { get; set; }
         public string String { get; set; }
         public bool Bool { get; set; }
         public List<int> List { get; set; }

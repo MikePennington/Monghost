@@ -13,6 +13,7 @@ namespace Mongonizer
         MongoCollection<T> GetCollection<T>() where T : MongoEntity;
         T FindOne<T>(BsonValue id) where T : MongoEntity;
         void Save<T>(T entity) where T : MongoEntity;
+        void Remove<T>(T entity) where T : MongoEntityWithObjectId;
         void Remove<T>(BsonValue id) where T : MongoEntity;
     }
 
@@ -53,6 +54,13 @@ namespace Mongonizer
         {
             var collection = GetCollection<T>();
             collection.Save(entity);
+        }
+
+        public void Remove<T>(T entity) where T : MongoEntityWithObjectId
+        {
+            var collection = GetCollection<T>();
+            var query = Query.EQ(GetIdName<T>(), entity.Id);
+            collection.Remove(query);
         }
 
         public void Remove<T>(BsonValue id) where T : MongoEntity

@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MongoBondo;
+using Mongonizer;
 using Shouldly;
 
 namespace UnitTests

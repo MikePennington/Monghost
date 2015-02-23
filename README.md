@@ -1,4 +1,2 @@
-MongoBondo
-========
-
-A wrapper around the .NET Mongo API that abstracts entity to collection mapping.
+# Package.Mongonizer
+A lightweight wrapper around the .NET MongoDB ORM to automate object to collection name mapping

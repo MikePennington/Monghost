@@ -62,7 +62,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Mongonizer\Mongonizer.csproj">
       <Project>{95a7d27d-b9b9-42b2-a54b-b963db4c2b17}</Project>
-      <Name>Monghost</Name>
+      <Name>Mongonizer</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

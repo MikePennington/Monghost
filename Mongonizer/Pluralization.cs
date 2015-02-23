@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity.Design.PluralizationServices;
 using System.Globalization;
 
-namespace MongoBondo
+namespace Mongonizer
 {
     internal static class Pluralization
     {

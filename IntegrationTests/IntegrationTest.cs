@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MongoBondo;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Mongonizer;
 using Ploeh.AutoFixture;
 using Shouldly;
 
@@ -19,7 +19,7 @@ namespace IntegrationTests
         private static Process _mongodProcess;
 
         private Fixture _fixture;
-        private IMongoHelper _mongoHelper;
+        private IMongonizer _mongonizer;
 
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
@@ -40,20 +40,20 @@ namespace IntegrationTests
             _fixture = new Fixture();
 
             // Create a new database with each test to ensure test isolation
-            _mongoHelper = new MongoHelper("mongodb://127.0.0.1:27027", "monghost-integration-tests-" + Guid.NewGuid());
+            _mongonizer = new Mongonizer.Mongonizer("mongodb://127.0.0.1:27027", "monghost-integration-tests-" + Guid.NewGuid());
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            _mongoHelper.Database.Drop();
+            _mongonizer.Database.Drop();
         }
 
         [TestMethod]
         public void SaveShouldPopulateId()
         {
             var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
-            _mongoHelper.Save(entityFromFixture);
+            _mongonizer.Save(entityFromFixture);
 
             entityFromFixture.Id.ShouldNotBe(ObjectId.Empty);
         }
@@ -62,9 +62,9 @@ namespace IntegrationTests
         public void ShouldPluralizeAndLowercaseCollectionName()
         {
             var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
-            _mongoHelper.Save(entityFromFixture);
+            _mongonizer.Save(entityFromFixture);
 
-            var entitytFromDb = _mongoHelper.Database.GetCollection<EntityWithObjectId>("entitywithobjectids").FindOne();
+            var entitytFromDb = _mongonizer.Database.GetCollection<EntityWithObjectId>("entitywithobjectids").FindOne();
             entitytFromDb.ShouldNotBe(null);
         }
 
@@ -72,9 +72,9 @@ namespace IntegrationTests
         public void ShouldSaveAndFind()
         {
             var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
-            _mongoHelper.Save(entityFromFixture);
+            _mongonizer.Save(entityFromFixture);
 
-            var entitytFromDb = _mongoHelper.FindOne<EntityWithObjectId>(entityFromFixture.Id);
+            var entitytFromDb = _mongonizer.FindOne<EntityWithObjectId>(entityFromFixture.Id);
 
             entitytFromDb.Id.ShouldBe(entityFromFixture.Id);
             entitytFromDb.String.ShouldBe(entityFromFixture.String);
@@ -86,11 +86,11 @@ namespace IntegrationTests
         public void ShouldRemove()
         {
             var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
-            _mongoHelper.Save(entityFromFixture);
+            _mongonizer.Save(entityFromFixture);
 
-            _mongoHelper.Remove(entityFromFixture);
+            _mongonizer.Remove(entityFromFixture);
 
-            var entitytFromDb = _mongoHelper.FindOne<EntityWithObjectId>(entityFromFixture.Id);
+            var entitytFromDb = _mongonizer.FindOne<EntityWithObjectId>(entityFromFixture.Id);
 
             entitytFromDb.ShouldBe(null);
         }
@@ -99,11 +99,11 @@ namespace IntegrationTests
         public void ShouldRemoveWithNonObjectIdId()
         {
             var entityFromFixture = _fixture.Build<EntityWithNonObjectIdId>().Create();
-            _mongoHelper.Save(entityFromFixture);
+            _mongonizer.Save(entityFromFixture);
 
-            _mongoHelper.Remove<EntityWithNonObjectIdId>(entityFromFixture.Id);
+            _mongonizer.Remove<EntityWithNonObjectIdId>(entityFromFixture.Id);
 
-            var entitytFromDb = _mongoHelper.FindOne<EntityWithNonObjectIdId>(entityFromFixture.Id);
+            var entitytFromDb = _mongonizer.FindOne<EntityWithNonObjectIdId>(entityFromFixture.Id);
 
             entitytFromDb.ShouldBe(null);
         }
@@ -112,11 +112,11 @@ namespace IntegrationTests
         public void ShouldRemoveWithNoId()
         {
             var entityFromFixture = _fixture.Build<EntityWithNonId>().Create();
-            _mongoHelper.Save(entityFromFixture);
+            _mongonizer.Save(entityFromFixture);
 
-            _mongoHelper.Remove<EntityWithNonId>(entityFromFixture.Name);
+            _mongonizer.Remove<EntityWithNonId>(entityFromFixture.Name);
 
-            var entitytFromDb = _mongoHelper.FindOne<EntityWithNonId>(entityFromFixture.Name);
+            var entitytFromDb = _mongonizer.FindOne<EntityWithNonId>(entityFromFixture.Name);
 
             entitytFromDb.ShouldBe(null);
         }
@@ -125,9 +125,9 @@ namespace IntegrationTests
         public void ShouldSaveAndFindObjectWithNonObjectIdId()
         {
             var entityFromFixture = _fixture.Build<EntityWithNonObjectIdId>().Create();
-            _mongoHelper.Save(entityFromFixture);
+            _mongonizer.Save(entityFromFixture);
 
-            var entitytFromDb = _mongoHelper.FindOne<EntityWithNonObjectIdId>(entityFromFixture.Id);
+            var entitytFromDb = _mongonizer.FindOne<EntityWithNonObjectIdId>(entityFromFixture.Id);
 
             entitytFromDb.Id.ShouldBe(entityFromFixture.Id);
             entitytFromDb.String.ShouldBe(entityFromFixture.String);
@@ -139,9 +139,9 @@ namespace IntegrationTests
         public void ShouldSaveAndFindEntityWithNoId()
         {
             var entityFromFixture = _fixture.Build<EntityWithNonId>().Create();
-            _mongoHelper.Save(entityFromFixture);
+            _mongonizer.Save(entityFromFixture);
 
-            var entitytFromDb = _mongoHelper.FindOne<EntityWithNonId>(entityFromFixture.Name);
+            var entitytFromDb = _mongonizer.FindOne<EntityWithNonId>(entityFromFixture.Name);
 
             entitytFromDb.Name.ShouldBe(entityFromFixture.Name);
             entitytFromDb.Age.ShouldBe(entityFromFixture.Age);
@@ -169,9 +169,5 @@ namespace IntegrationTests
         [BsonId]
         public string Name { get; set; }
         public int Age { get; set; }
-        public override string GetIdName()
-        {
-            return "_id";
-        }
     }
 }

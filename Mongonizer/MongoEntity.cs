@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace MongoBondo
+namespace Mongonizer
 {
     public class MongoEntity
     {

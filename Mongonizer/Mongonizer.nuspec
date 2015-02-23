@@ -1,0 +1,13 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>GameStop.Mongonizer</id>
+    <version>0.0.0</version><!-- Version set by TeamCity -->
+    <title>Mongonizer</title>
+    <authors>Mike Pennington</authors>
+    <owners>GameStop Online</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A lightweight wrapper around the .NET MongoDB ORM to automate object to collection name mapping.</description>
+    <tags></tags>
+  </metadata>
+</package>

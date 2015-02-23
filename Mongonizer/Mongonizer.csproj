@@ -7,8 +7,8 @@
     <ProjectGuid>{95A7D27D-B9B9-42B2-A54B-B963DB4C2B17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MongoBondo</RootNamespace>
-    <AssemblyName>MongoBondo</AssemblyName>
+    <RootNamespace>Mongonizer</RootNamespace>
+    <AssemblyName>Mongonizer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -46,11 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MongoEntity.cs" />
-    <Compile Include="MongoHelper.cs" />
+    <Compile Include="Mongonizer.cs" />
     <Compile Include="Pluralization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Mongonizer.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

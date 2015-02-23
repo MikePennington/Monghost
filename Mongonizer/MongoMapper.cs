@@ -19,6 +19,7 @@ namespace Mongonizer
     public class MongoMapper : IMongoMapper
     {
         private static readonly Dictionary<Type, string> CollectionNameMap = new Dictionary<Type, string>();
+        private static readonly Dictionary<Type, string> IdNameMap = new Dictionary<Type, string>();
 
         private static MongoDatabase _database;
 
@@ -36,18 +37,7 @@ namespace Mongonizer
 
         public MongoCollection<T> GetCollection<T>() where T : MongoEntity
         {
-            // Check dictionary first
-            string collectionName;
-            if (CollectionNameMap.ContainsKey(typeof(T)))
-            {
-                collectionName = CollectionNameMap[typeof(T)];
-            }
-            else
-            {
-                collectionName = BuildCollectionName(typeof(T));
-                CollectionNameMap.Add(typeof(T), collectionName);
-            }
-
+            var collectionName = GetCollectionName<T>();
             var collection = Database.GetCollection<T>(collectionName);
             return collection;
         }
@@ -55,8 +45,7 @@ namespace Mongonizer
         public T FindOne<T>(BsonValue id) where T : MongoEntity
         {
             var collection = GetCollection<T>();
-            var instance = Activator.CreateInstance<T>();
-            var query = Query.EQ(instance.GetIdName(), id);
+            var query = Query.EQ(GetIdName<T>(), id);
             return collection.FindOne(query);
         }
 
@@ -69,15 +58,40 @@ namespace Mongonizer
         public void Remove<T>(BsonValue id) where T : MongoEntity
         {
             var collection = GetCollection<T>();
-            var instance = Activator.CreateInstance<T>();
-            var query = Query.EQ(instance.GetIdName(), id);
+            var query = Query.EQ(GetIdName<T>(), id);
             collection.Remove(query);
         }
 
-        public string BuildCollectionName(Type type)
+        private string GetCollectionName<T>() where T : MongoEntity
         {
-            var name = type.Name.ToLower();
-            return Pluralization.Pluralize(name);
+            Type type = typeof(T);
+            string collectionName;
+            if (CollectionNameMap.ContainsKey(type))
+            {
+                collectionName = CollectionNameMap[type];
+            }
+            else
+            {
+                collectionName = Pluralization.Pluralize(type.Name.ToLower());
+                CollectionNameMap.Add(type, collectionName);
+            }
+            return collectionName;
+        }
+        
+        private string GetIdName<T>() where T : MongoEntity
+        {
+            Type type = typeof (T);
+            string idName;
+            if (IdNameMap.ContainsKey(type))
+            {
+                idName = IdNameMap[type];
+            }
+            else
+            {
+                idName = Activator.CreateInstance<T>().GetIdName();
+                IdNameMap.Add(type, idName);
+            }
+            return idName;
         }
     }
 }

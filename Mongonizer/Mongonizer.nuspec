@@ -1,13 +1,17 @@
 ﻿<?xml version="1.0"?>
-<package >
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Mongonizer</id>
-    <version>0.1</version>
+    <version>0.1.3</version>
     <title>Mongonizer</title>
     <authors>Mike Pennington</authors>
     <owners>Mike Pennnington</owners>
+    <projectUrl>https://github.com/MikePennington/Mongonizer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A lightweight wrapper around the .NET MongoDB ORM to automate object to collection name mapping.</description>
     <tags></tags>
+    <dependencies>
+      <dependency id="mongocsharpdriver" version="1.9.2" />
+    </dependencies>
   </metadata>
 </package>

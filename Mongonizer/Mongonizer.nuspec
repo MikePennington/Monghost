@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0"?>
 <package >
   <metadata>
-    <id>GameStop.Mongonizer</id>
-    <version>1.0.0</version>
+    <id>Mongonizer</id>
+    <version>0.1</version>
     <title>Mongonizer</title>
     <authors>Mike Pennington</authors>
     <owners>Mike Pennnington</owners>

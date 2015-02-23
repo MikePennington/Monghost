@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/MikePennington/Mongonizer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A lightweight wrapper around the .NET MongoDB ORM to automate object to collection name mapping.</description>
-    <tags></tags>
+    <tags>mongodb mongo</tags>
     <dependencies>
       <dependency id="mongocsharpdriver" version="1.9.2" />
     </dependencies>

@@ -6,7 +6,7 @@ using MongoDB.Driver.Builders;
 
 namespace Mongonizer
 {
-    public interface IMongonizer
+    public interface IMongoMapper
     {
         MongoDatabase Database { get; }
         MongoCollection<T> GetCollection<T>() where T : MongoEntity;
@@ -17,13 +17,13 @@ namespace Mongonizer
         void Remove<T>(BsonValue id) where T : MongoEntity;
     }
 
-    public class Mongonizer : IMongonizer
+    public class MongoMapper : IMongoMapper
     {
         private static readonly Dictionary<Type, string> CollectionNameMap = new Dictionary<Type, string>();
 
         private static MongoDatabase _database;
 
-        public Mongonizer(string connectionString, string databaseName)
+        public MongoMapper(string connectionString, string databaseName)
         {
             if (_database == null)
             {

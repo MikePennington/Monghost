@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MongoEntity.cs" />
-    <Compile Include="Mongonizer.cs" />
+    <Compile Include="MongoMapper.cs" />
     <Compile Include="Pluralization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

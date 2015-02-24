@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver.Builders;
 using Mongonizer;
 using Ploeh.AutoFixture;
 using Shouldly;
@@ -69,12 +70,26 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void ShouldSaveAndFind()
+        public void ShouldSaveAndFindById()
         {
             var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
             _mongoMapper.Save(entityFromFixture);
 
             var entitytFromDb = _mongoMapper.FindOne<EntityWithObjectId>(entityFromFixture.Id);
+
+            entitytFromDb.Id.ShouldBe(entityFromFixture.Id);
+            entitytFromDb.String.ShouldBe(entityFromFixture.String);
+            entitytFromDb.Bool.ShouldBe(entityFromFixture.Bool);
+            entitytFromDb.List.Count.ShouldBe(entityFromFixture.List.Count);
+        }
+
+        [TestMethod]
+        public void ShouldSaveAndFindByQuery()
+        {
+            var entityFromFixture = _fixture.Build<EntityWithObjectId>().Without(x => x.Id).Create();
+            _mongoMapper.Save(entityFromFixture);
+
+            var entitytFromDb = _mongoMapper.FindOne<EntityWithObjectId>(Query<EntityWithObjectId>.EQ(x => x.String, entityFromFixture.String));
 
             entitytFromDb.Id.ShouldBe(entityFromFixture.Id);
             entitytFromDb.String.ShouldBe(entityFromFixture.String);

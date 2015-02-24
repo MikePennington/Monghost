@@ -12,6 +12,7 @@ namespace Mongonizer
         MongoDatabase Database { get; }
         MongoCollection<T> GetCollection<T>() where T : MongoEntity;
         T FindOne<T>(BsonValue id) where T : MongoEntity;
+        T FindOne<T>(IMongoQuery query) where T : MongoEntity;
         void Save<T>(T entity) where T : MongoEntity;
         void Remove<T>(T entity) where T : MongoEntityWithObjectId;
         void Remove<T>(BsonValue id) where T : MongoEntity;
@@ -47,6 +48,12 @@ namespace Mongonizer
         {
             var collection = GetCollection<T>();
             var query = Query.EQ(GetIdName<T>(), id);
+            return collection.FindOne(query);
+        }
+
+        public T FindOne<T>(IMongoQuery query) where T : MongoEntity
+        {
+            var collection = GetCollection<T>();
             return collection.FindOne(query);
         }
 

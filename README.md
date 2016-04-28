@@ -1,6 +1,13 @@
 # Mongonizer
 A lightweight wrapper around the .NET MongoDB ORM to automate object to collection name mapping.
 
+## Installation
+
+Install Mongonizer via NuGet. There are no dependencies other than the official MongoDB driver for .NET.
+```
+Install-Package Mongonizer
+```
+
 ## How-To
 
 Mongonizer allows you to easily find, save, and remove entities from MongoDB without having to maintain mappings between classes and collection names.

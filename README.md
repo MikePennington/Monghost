@@ -8,7 +8,7 @@ Mongonizer allows you to easily find, save, and remove entities from MongoDB wit
 IMongoMapper mongoMapper = new MongoMapper("mongodb://127.0.0.1:27027", "testdb");
 var cat = _mongoMapper.FindOne<Cat>(Query<Cat>.EQ(x => x.Name, "Fluffy");
 _mongoMapper.Save(cat);
-_mongoMapper.Remove<Cat>(cat);
+_mongoMapper.Remove(cat);
 ```
 
 Mongonizer users the .NET PluralizationService to ensure the collection names match the MongoDB standard of plural, lowercase collection names.

@@ -23,7 +23,7 @@ namespace Mongonizer
         private static readonly Dictionary<Type, string> CollectionNameMap = new Dictionary<Type, string>();
         private static readonly Dictionary<Type, string> IdNameMap = new Dictionary<Type, string>();
 
-        private static MongoDatabase _database;
+        private readonly MongoDatabase _database;
 
         public MongoMapper(string connectionString, string databaseName)
         {

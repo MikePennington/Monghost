@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Mongonizer</id>
-    <version>0.1.5</version>
+    <version>0.1.6</version>
     <title>Mongonizer</title>
     <authors>Mike Pennington</authors>
     <owners>Mike Pennnington</owners>
